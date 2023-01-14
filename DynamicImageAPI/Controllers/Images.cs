@@ -1,13 +1,13 @@
-using System.Net;
-using System.Text.Json.Nodes;
 using DynamicImageAPI.Models;
 using SkiaSharp;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json.Linq;
 
 namespace DynamicImageAPI.Controllers;
 
 [ApiController]
+[EnableRateLimiting("fixed")]
 [Route("[controller]")]
 public class Images : ControllerBase
 {
