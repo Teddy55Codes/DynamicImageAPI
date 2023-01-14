@@ -2,7 +2,7 @@
 
 public static class CounterManager
 {
-    private static Dictionary<string, long> _savedCounters = new Dictionary<string, long>() {{"0", 1111110}, {"1", 9999998}, {"2", 111111111111110}};
+    private static Dictionary<string, long> _savedCounters = new Dictionary<string, long>();
 
     public static long GetNewCounterValue(string counterId)
     {
