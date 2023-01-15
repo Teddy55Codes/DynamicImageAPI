@@ -57,8 +57,9 @@ public static class LocationManager
 
     private static void ClearDataBase()
     {
-        Task.Delay(new TimeSpan(1, 0, 0, 0));
+        Thread.Sleep(new TimeSpan(1, 0, 0, 0));
         var counterDb = SQLiteDBAccess.SQLiteDBAccess.Instance("Images", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+        counterDb.OpenDBFile();
         counterDb.CreateTable("Locations", "Query TEXT PRIMARY KEY, City TEXT, IsMobile INTEGER, IsProxy INTEGER");
 
     }
