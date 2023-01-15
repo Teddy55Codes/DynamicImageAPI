@@ -3,6 +3,11 @@ using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.{env.EnvironmentName}.json",
+    optional: true,
+    reloadOnChange: true);
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
