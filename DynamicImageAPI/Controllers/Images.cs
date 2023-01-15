@@ -1,7 +1,5 @@
-using DynamicImageAPI.Models;
 using SkiaSharp;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace DynamicImageAPI.Controllers;
 

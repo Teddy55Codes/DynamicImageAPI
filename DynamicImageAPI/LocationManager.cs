@@ -22,7 +22,7 @@ public static class LocationManager
         if (!locationDb.CheckForExistingElementByAttribute("Locations", "Query", $"'{ipAddress}'"))
         {
             var ipLocation = GetCityFromIp(ipAddress);
-            if (ipLocation.City.Equals(_locationFallback)) return _locationFallback;
+            if (ipLocation.City == null || ipLocation.City.Equals(_locationFallback)) return _locationFallback;
             var isMobile = ipLocation.Mobile ? 1 : 0;
             var isProxy = ipLocation.Proxy ? 1 : 0;
             locationDb.Insert("Locations", 
