@@ -10,6 +10,7 @@
         <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
         <PackageReference Include="SkiaSharp" Version="2.88.3" />
+        <PackageReference Include="SQLiteDBAccess" Version="1.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
