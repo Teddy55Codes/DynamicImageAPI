@@ -1,3 +1,4 @@
+using System.Reflection;
 using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,12 @@ builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrateg
 builder.Services.AddInMemoryRateLimiting();
 
 var app = builder.Build();
+
+// Set-up sqlite db
+var counterDb = SQLiteDBAccess.SQLiteDBAccess.Instance("Images", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
+counterDb.CreateTable("Counters", "Id TEXT PRIMARY KEY, Name TEXT, Count INTEGER", false);
+counterDb.CreateTable("Locations", "Query TEXT PRIMARY KEY, City TEXT, IsMobile INTEGER, IsProxy INTEGER", false);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
