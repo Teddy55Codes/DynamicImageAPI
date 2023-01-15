@@ -9,13 +9,11 @@ namespace DynamicImageAPI.Controllers;
 [Route("[controller]")]
 public class Images : ControllerBase
 {
-    private string _locationFallback = "Earth";
-    
     [HttpGet("Counter")]
     public IActionResult Get(string counterId = "0", int fontSize = 12, string textColorHEX = "000000")
     {
         fontSize = fontSize > 100 ? 100 : fontSize;
-        long counter = CounterManager.GetNewCounterValue(counterId);
+        long counter = DataManager.GetNewCounterValue(counterId);
 
         SKRect bounds = new SKRect();
         
@@ -39,7 +37,8 @@ public class Images : ControllerBase
     [HttpGet("Location")]
     public IActionResult GetLocation(int fontSize = 12, string textColorHEX = "000000")
     {
-        string cityLocation = GetCityFromIp(Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty);
+        fontSize = fontSize > 100 ? 100 : fontSize;
+        string cityLocation = LocationManager.GetClientLocation(Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty);
         
         SKRect bounds = new SKRect();
         
@@ -58,20 +57,5 @@ public class Images : ControllerBase
         var skData = bitmap.Encode(SKEncodedImageFormat.Png, 0);
 
         return File(skData.ToArray(), "image/png");
-    }
-
-    private string GetCityFromIp(string ipAddress)
-    {
-        HttpClient client = new HttpClient();
-        
-        client.DefaultRequestHeaders.Add("User-Agent", "DynamicImageAPI");
-        client.DefaultRequestHeaders.Add("Accept", "application/json");
-
-        if (string.IsNullOrEmpty(ipAddress)) return _locationFallback;
-        var response = client.GetAsync($"http://ip-api.com/json/{ipAddress}").Result;
-        if (!response.IsSuccessStatusCode) return _locationFallback;
-        IpAPIRsoponse? ipApiRsoponse = JObject.Parse(response.Content.ReadAsStringAsync().Result).ToObject<IpAPIRsoponse>();
-        if (ipApiRsoponse?.City == null) return _locationFallback;
-        return ipApiRsoponse.City;
     }
 }
