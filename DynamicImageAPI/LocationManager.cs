@@ -7,6 +7,13 @@ namespace DynamicImageAPI;
 public static class LocationManager
 {
     private static string _locationFallback = "Earth";
+
+    static LocationManager()
+    {
+        var thread = new Thread(ClearDataBase);
+        thread.IsBackground = true;
+        thread.Start();
+    }
     
     public static string GetClientLocation(string ipAddress)
     {
@@ -41,10 +48,18 @@ public static class LocationManager
         client.DefaultRequestHeaders.Add("Accept", "application/json");
 
         if (string.IsNullOrEmpty(ipAddress)) return new IpLocation() { City = _locationFallback};
-        var response = client.GetAsync($"http://ip-api.com/json/{ipAddress}?fields=query,status,city,mobile,proxy,").Result;
+        var response = client.GetAsync($"http://ip-api.com/json/{ipAddress}?fields=query,status,city,mobile,proxy").Result;
         if (!response.IsSuccessStatusCode) return new IpLocation() { City = _locationFallback};
         IpLocation? ipLocation = JObject.Parse(response.Content.ReadAsStringAsync().Result).ToObject<IpLocation>();
         if (ipLocation == null) return new IpLocation() { City = _locationFallback};
         return ipLocation;
+    }
+
+    private static void ClearDataBase()
+    {
+        Task.Delay(new TimeSpan(1, 0, 0, 0));
+        var counterDb = SQLiteDBAccess.SQLiteDBAccess.Instance("Images", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+        counterDb.CreateTable("Locations", "Query TEXT PRIMARY KEY, City TEXT, IsMobile INTEGER, IsProxy INTEGER");
+
     }
 }
