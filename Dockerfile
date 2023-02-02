@@ -1,5 +1,7 @@
 FROM ubuntu:jammy AS builder
 
+EXPOSE 29321
+
 WORKDIR /tmp
 RUN apt-get update && apt-get install -y wget
 RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
