@@ -1,15 +1,10 @@
-FROM ubuntu:jammy AS builder
+FROM ubuntu:jammy AS runner
 
 EXPOSE 29321
 
 WORKDIR /tmp
-RUN apt-get update && apt-get install -y wget
-RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-RUN dpkg -i packages-microsoft-prod.deb
-RUN rm packages-microsoft-prod.deb
-
-RUN apt-get update && apt-get install -y \
-    dotnet-sdk-7.0
+RUN apt-get update && apt-get update -y wget
+RUN wget -O - https://raw.githubusercontent.com/pjgpetecodes/dotnet7pi/master/install.sh | sudo bash
 
 WORKDIR /root/dyn/
 COPY . /root/dyn/
