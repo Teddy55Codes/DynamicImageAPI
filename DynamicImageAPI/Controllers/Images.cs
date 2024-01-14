@@ -8,40 +8,24 @@ namespace DynamicImageAPI.Controllers;
 public class Images : ControllerBase
 {
     [HttpGet("Counter")]
-    public IActionResult Get(string counterId = "0", int fontSize = 12, string textColorHEX = "000000")
-    {
-        fontSize = fontSize > 100 ? 100 : fontSize;
-        long counter = DataManager.GetNewCounterValue(counterId);
+    public IActionResult Get(string counterId = "0", int fontSize = 12, string color = "#000000") => 
+        GetImageFileWithText(DataManager.GetNewCounterValue(counterId).ToString(), fontSize, color); // File(skData.ToArray(), "image/png");
 
-        SKRect bounds = new SKRect();
-        
-        var textPaint = new SKPaint { TextSize = fontSize, Color = SKColor.Parse("#"+textColorHEX) };
-        textPaint.MeasureText(counter.ToString(), ref bounds);
-        
-        var bitmap = new SKBitmap(
-            (int)bounds.Right+2, 
-            (int)bounds.Height);
-
-        SKCanvas bitmapCanvas = new SKCanvas(bitmap);
-
-        bitmapCanvas.Clear();
-        bitmapCanvas.DrawText(counter.ToString(), 0, -bounds.Top, textPaint);
-
-        var skData = bitmap.Encode(SKEncodedImageFormat.Png, 0);
-
-        return File(skData.ToArray(), "image/png");
-    }
-    
     [HttpGet("Location")]
-    public IActionResult GetLocation(int fontSize = 12, string textColorHEX = "000000")
+    public IActionResult GetLocation(int fontSize = 12, string color = "#000000")
+    {
+        string cityLocation = LocationManager.GetClientLocation(Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty);
+        return GetImageFileWithText(cityLocation, fontSize, color);
+    }
+
+    private FileContentResult GetImageFileWithText(string text, int fontSize, string color) 
     {
         fontSize = fontSize > 100 ? 100 : fontSize;
-        string cityLocation = LocationManager.GetClientLocation(Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty);
         
         SKRect bounds = new SKRect();
         
-        var textPaint = new SKPaint { TextSize = fontSize, Color = SKColor.Parse("#"+textColorHEX) };
-        textPaint.MeasureText(cityLocation, ref bounds);
+        var textPaint = new SKPaint { TextSize = fontSize, Color = SKColor.Parse(color) };
+        textPaint.MeasureText(text, ref bounds);
         
         var bitmap = new SKBitmap(
             (int)bounds.Right+2, 
@@ -50,9 +34,9 @@ public class Images : ControllerBase
         SKCanvas bitmapCanvas = new SKCanvas(bitmap);
 
         bitmapCanvas.Clear();
-        bitmapCanvas.DrawText(cityLocation, 0, -bounds.Top, textPaint);
+        bitmapCanvas.DrawText(text, 0, -bounds.Top, textPaint);
 
-        var skData = bitmap.Encode(SKEncodedImageFormat.Png, 0);
+        var skData = bitmap.Encode(SKEncodedImageFormat.Png, 50);
 
         return File(skData.ToArray(), "image/png");
     }
