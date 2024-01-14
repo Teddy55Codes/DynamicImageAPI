@@ -10,21 +10,21 @@ This api has different endpoints all based on the premise of dynamic images.
 
 - counterId
 
-    `default: "0"`
+    default: `"0"`
 
-    `Is used to create multiple independent counters.`
+    Is used to create multiple independent counters.
 
 - fontSize
   
-   `default: 12`
+   default: `12`
 
-   `Set the fontsize for the response image.`
+   Set the fontsize for the response image.
   
-- textColorHEX
+- hexColor
 
-   `default: "000000"`
+   default: `"#000000"`
 
-   `Set the text color useful if you want to display the counter in a light and dark theme.` 
+   Set the text color useful if you want to display the counter in a light and dark theme.`
   
 
 #### description
@@ -38,20 +38,18 @@ Each counter has a separate count based on the `counterId`.
 #### parameters
 
 - fontSize
+   default: `12`
 
-   `default: 12`
-
-   `Set the fontsize for the response image.`
+   Set the fontsize for the response image.
 
 
-- textColorHEX
-  
-  `default: "000000"`
+- hexColor
+  default: `"#000000"`
 
-  `Set the text color useful if you want to display the counter in a light and dark theme.`
+  Set the text color useful if you want to display the counter in a light and dark theme.
 
 #### description
 Returns the name of the city from which the request was made as an image.
-This information is fetched like this: `http://ip-api.com/json/1.1.1.1?fields=query,status,city,mobile,proxy`.
+This information is fetched from ip-api.com. The specific request that is made is: `http://ip-api.com/json/1.1.1.1?fields=query,status,city,mobile,proxy`.
 As of writing this the rate limit for this api is 45 requests per minute.
 The location data is cleared every 24h. This is done to always have fresh location data. 
