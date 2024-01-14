@@ -22,22 +22,21 @@ public class Images : ControllerBase
     {
         fontSize = fontSize > 100 ? 100 : fontSize;
         
-        SKRect bounds = new SKRect();
+        var bounds = new SKRect();
         
-        var textPaint = new SKPaint { TextSize = fontSize, Color = SKColor.Parse(color) };
+        var textPaint = new SKPaint
+        {
+            TextSize = fontSize, 
+            Color = SKColor.Parse(color)
+        };
         textPaint.MeasureText(text, ref bounds);
         
-        var bitmap = new SKBitmap(
-            (int)bounds.Right+2, 
-            (int)bounds.Height);
-
-        SKCanvas bitmapCanvas = new SKCanvas(bitmap);
-
+        using var bitmap = new SKBitmap((int)bounds.Right+2, (int)bounds.Height);
+        using var bitmapCanvas = new SKCanvas(bitmap);
         bitmapCanvas.Clear();
         bitmapCanvas.DrawText(text, 0, -bounds.Top, textPaint);
-
+        
         var skData = bitmap.Encode(SKEncodedImageFormat.Png, 50);
-
         return File(skData.ToArray(), "image/png");
     }
 }
